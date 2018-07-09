@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="13px" viewBox="0 0 16 13" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->
+    <title>Icons/Alerts/Soft-error</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Icons/Alerts/Soft-error" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Group-6">
+            <path d="M8.86824314,0.519425499 L15.1450635,11.5038611 C15.4190734,11.9833785 15.2524767,12.5942332 14.7729593,12.8682431 C14.6218616,12.9545847 14.4508473,13 14.2768203,13 L1.72317968,13 C1.17089493,13 0.723179678,12.5522847 0.723179678,12 C0.723179678,11.8259731 0.768594996,11.6549588 0.854936536,11.5038611 L7.13175686,0.519425499 C7.40576683,0.0399080522 8.01662149,-0.126688675 8.49613894,0.147321295 C8.65117022,0.235910596 8.77965384,0.364394222 8.86824314,0.519425499 Z" id="Triangle" fill="#E1930C"></path>
+            <rect id="Rectangle-9" fill="#FFFFFF" x="7" y="4" width="2" height="4" rx="1"></rect>
+            <circle id="Oval" fill="#FFFFFF" cx="8" cy="10" r="1"></circle>
+        </g>
+    </g>
+</svg>

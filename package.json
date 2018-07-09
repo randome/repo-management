@@ -1,0 +1,24 @@
+{
+  "name": "repo-management",
+  "version": "0.0.517",
+  "description": null,
+  "keywords": [],
+  "main": "index.js",
+  "dependencies": {
+    "octokat": "0.10.0",
+    "react": "16.4.1",
+    "react-dom": "16.4.1",
+    "react-table": "6.8.6",
+    "react-tagsinput": "3.19.0",
+    "react-tooltip": "3.6.1"
+  },
+  "devDependencies": {
+    "react-scripts": "1.0.0"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  }
+}
