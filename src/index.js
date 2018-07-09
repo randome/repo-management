@@ -20,17 +20,17 @@ function getToken() {
   return urlParams.get("token");
 }
 
-function TopicLink({ topic }) {
-  return (
-    <a
-      className="topic-link"
-      href={`https://github.com/search?q=topic:${topic}+org:karnov&type=Repositories`}
-      target="_blank"
-    >
-      {topic}
-    </a>
-  );
-}
+// function TopicLink({ topic }) {
+//   return (
+//     <a
+//       className="topic-link"
+//       href={`https://github.com/search?q=topic:${topic}+org:karnov&type=Repositories`}
+//       target="_blank"
+//     >
+//       {topic}
+//     </a>
+//   );
+// }
 
 function ErrorIcon({ message }) {
   return (
@@ -48,25 +48,6 @@ function ErrorIcon({ message }) {
   );
 }
 
-class Example extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { tags: this.props.tags };
-  }
-
-  handleChange(tags) {
-    this.setState({ tags });
-    // update repo tags on github
-    const token = getToken();
-    // github.updateRepoTopics(token, this.props.name, tags);
-    console.log("topics updated");
-  }
-
-  render() {
-    return <TagsInput value={this.state.tags} onChange={::this.handleChange} />;
-  }
-}
-
 class App extends React.Component {
   constructor() {
     super();
@@ -74,6 +55,7 @@ class App extends React.Component {
       data: []
     };
     this.renderEditableDescription = this.renderEditableDescription.bind(this);
+    this.renderEditableTopics = this.renderEditableTopics.bind(this);
   }
 
   async componentDidMount() {
@@ -131,7 +113,7 @@ class App extends React.Component {
               const token = getToken();
               const name = data[cellInfo.index]["name"];
               // github.updateRepoDescription(token, name, description);
-              console.log("description updated");
+              console.log("description updated on repo: " + name);
             }
           }}
           dangerouslySetInnerHTML={{
@@ -160,24 +142,26 @@ class App extends React.Component {
   // }
 
   renderEditableTopics(cellInfo) {
-    return <Example tags={cellInfo.value} />;
-  }
-
-  renderEditableTopics2(cellInfo) {
-    // handleChange(tags) {
-    //   this.setState({ tags });
-    //   // update repo tags on github
-    //   const token = getToken();
-    //   // github.updateRepoTopics(token, this.props.name, tags);
-    //   console.log("topics updated");
-    // }
-
     return (
       <div>
         {!utils.valid_topics(cellInfo.value) && (
           <ErrorIcon message="Team topic is missing!" />
         )}
-        <TagsInput value={this.state.tags} onChange={::this.handleChange} />;
+        <TagsInput
+          value={cellInfo.value}
+          onChange={tags => {
+            const data = [...this.state.data];
+            if (data[cellInfo.index]["topics"] !== tags) {
+              data[cellInfo.index]["topics"] = tags;
+              this.setState({ data });
+              // update repo topics on github
+              const token = getToken();
+              const name = data[cellInfo.index]["name"];
+              //github.updateRepoTopics(token, this.props.name, tags);
+              console.log("topics updated on repo: " + name);
+            }
+          }}
+        />
       </div>
     );
   }
