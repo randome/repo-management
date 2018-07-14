@@ -106,7 +106,7 @@ class App extends React.Component {
 
   renderEditableTopics(cellInfo) {
     return (
-      <div>
+      <div className="topic">
         {!utils.valid_topics(cellInfo.value) && (
           <ErrorIcon message="Team topic is missing!" />
         )}
