@@ -15,6 +15,8 @@ import ReactTooltip from "react-tooltip";
 import TagsInput from "react-tagsinput";
 import "react-tagsinput/react-tagsinput.css";
 
+import DescriptionCell from "./components/DescriptionCell";
+
 function getToken() {
   const urlParams = new URLSearchParams(window.location.search);
   return urlParams.get("token");
@@ -54,20 +56,18 @@ class App extends React.Component {
     this.state = {
       data: []
     };
-    this.renderEditableDescription = this.renderEditableDescription.bind(this);
     this.renderEditableTopics = this.renderEditableTopics.bind(this);
   }
 
   async componentDidMount() {
     const token = getToken();
     const data = await github.getRepos(token);
-    // console.log(data);
     this.setState({ data });
   }
 
   renderName(cellInfo) {
     return (
-      <div>
+      <div className="name">
         {!utils.valid_name(cellInfo.value) && (
           <ErrorIcon message="Name can only include [a-z0-9.-] and should not start with &quot;kg&quot;!" />
         )}
@@ -78,51 +78,14 @@ class App extends React.Component {
     );
   }
 
-  // renderDescription(cellInfo) {
-  //   return (
-  //     <div>
-  //       {!utils.valid_description(cellInfo.value) && (
-  //         <ErrorIcon message="Description is missing!" />
-  //       )}
-  //       {cellInfo.value}
-  //     </div>
-  //   );
-  // }
+  onCellChange = key => (cell, value) => {
+    const data = [...this.state.data];
 
-  renderEditableDescription(cellInfo) {
-    return (
-      <div>
-        {!utils.valid_description(cellInfo.value) && (
-          <ErrorIcon message="Description is missing!" />
-        )}
-        <span
-          className="react-tagsinput"
-          style={{
-            display: "inline-block",
-            width: "100%"
-          }}
-          contentEditable
-          suppressContentEditableWarning
-          onBlur={e => {
-            const data = [...this.state.data];
-            const description = e.target.innerHTML;
-            if (data[cellInfo.index]["description"] !== description) {
-              data[cellInfo.index]["description"] = description;
-              this.setState({ data });
-              // update repo description on github
-              const token = getToken();
-              const name = data[cellInfo.index]["name"];
-              // github.updateRepoDescription(token, name, description);
-              console.log("description updated on repo: " + name);
-            }
-          }}
-          dangerouslySetInnerHTML={{
-            __html: this.state.data[cellInfo.index][cellInfo.column.id]
-          }}
-        />
-      </div>
-    );
-  }
+    data[cell.index][key] = value;
+
+    // TODO: Send update to github
+    this.setState({ data });
+  };
 
   // renderTopics(cellInfo) {
   //   if (cellInfo.value && cellInfo.value.length > 0)
@@ -143,7 +106,7 @@ class App extends React.Component {
 
   renderEditableTopics(cellInfo) {
     return (
-      <div>
+      <div className="topic">
         {!utils.valid_topics(cellInfo.value) && (
           <ErrorIcon message="Team topic is missing!" />
         )}
@@ -185,7 +148,7 @@ class App extends React.Component {
                 {
                   Header: "Description",
                   accessor: "description",
-                  Cell: this.renderEditableDescription,
+                  Cell: DescriptionCell(this.onCellChange("description")),
                   minWidth: 400
                 },
                 {
