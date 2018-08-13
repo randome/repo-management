@@ -20,3 +20,8 @@ export function valid_description(description) {
 export function valid_topics(topics) {
   return topics.some(topic => TEAM_NAMES.includes(topic));
 }
+
+export function getToken() {
+  const urlParams = new URLSearchParams(window.location.search);
+  return urlParams.get("token");
+}
