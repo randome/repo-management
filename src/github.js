@@ -15,14 +15,6 @@ export function getRepos(token) {
     .catch(err => console.error(err));
 }
 
-// export function getLastCommit(token, repo_name) {
-//   const octokat = auth(token);
-//   return octokat
-//     .repos("karnov", repo_name)
-//     .commits.fetchAll()
-//     .catch(err => console.error(err));
-// }
-
 export function update(token, repo_name, key, value) {
   switch (key) {
     case "description":

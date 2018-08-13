@@ -40,13 +40,13 @@ class App extends React.Component {
     );
   }
 
-  onCellChange = key => (cell, value) => {
+  handleCellChange = key => (cell, value) => {
     const data = [...this.state.data];
 
     if (data[cell.index][key] !== value) {
       data[cell.index][key] = value;
       this.setState({ data });
-      // TODO: Send update to github
+      // Send update to github
       const repo_name = data[cell.index]["name"];
       github.update(utils.getToken(), repo_name, key, value);
     }
@@ -71,13 +71,13 @@ class App extends React.Component {
                 {
                   Header: "Description",
                   accessor: "description",
-                  Cell: DescriptionCell(this.onCellChange("description")),
+                  Cell: DescriptionCell(this.handleCellChange("description")),
                   minWidth: 400
                 },
                 {
                   Header: "Topics",
                   accessor: "topics",
-                  Cell: TopicsCell(this.onCellChange("topics")),
+                  Cell: TopicsCell(this.handleCellChange("topics")),
                   minWidth: 200
                 },
                 {
@@ -86,7 +86,6 @@ class App extends React.Component {
                   accessor: d => (d.private ? "Yes" : "No"),
                   maxWitdh: 200
                 }
-                // TODO: add "last commit" column
               ]
             }
           ]}
