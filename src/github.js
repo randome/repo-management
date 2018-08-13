@@ -15,21 +15,43 @@ export function getRepos(token) {
     .catch(err => console.error(err));
 }
 
-export function updateRepoDescription(token, name, description) {
+// export function getLastCommit(token, repo_name) {
+//   const octokat = auth(token);
+//   return octokat
+//     .repos("karnov", repo_name)
+//     .commits.fetchAll()
+//     .catch(err => console.error(err));
+// }
+
+export function update(token, repo_name, key, value) {
+  switch (key) {
+    case "description":
+      // github.updateRepoDescription(token, repo_name, value);
+      break;
+    case "topics":
+      //github.updateRepoTopics(token, repo_name, value);
+      break;
+    default:
+    // do nothing
+  }
+  console.log(key + " on " + repo_name + " updated to: " + value);
+}
+
+export function updateRepoDescription(token, repo_name, description) {
   const octokat = auth(token);
   return octokat
-    .repos("karnov", name)
-    .update({ name: name, description: description })
+    .repos("karnov", repo_name)
+    .update({ name: repo_name, description: description })
     .then(() => {
       // Done!
     });
 }
 
-export function updateRepoTopics(token, name, tags) {
+export function updateRepoTopics(token, repo_name, topics) {
   const octokat = auth(token);
   return octokat
-    .repos("karnov", name, "topics")
-    .add({ names: tags })
+    .repos("karnov", repo_name, "topics")
+    .add({ names: topics })
     .then(() => {
       // Done!
     });

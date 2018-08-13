@@ -3,54 +3,15 @@ import { render } from "react-dom";
 import * as github from "./github";
 import * as utils from "./utils";
 
-// force pull
+import "./index.css";
 
 // Import React Table
 import ReactTable from "react-table";
 import "react-table/react-table.css";
-import "./index.css";
 
-// Import React Tooltip
-import ReactTooltip from "react-tooltip";
-
-// Import Tags Input
-import TagsInput from "react-tagsinput";
-import "react-tagsinput/react-tagsinput.css";
-
+import ErrorIcon from "./components/ErrorIcon";
 import DescriptionCell from "./components/DescriptionCell";
-
-function getToken() {
-  const urlParams = new URLSearchParams(window.location.search);
-  return urlParams.get("token");
-}
-
-// function TopicLink({ topic }) {
-//   return (
-//     <a
-//       className="topic-link"
-//       href={`https://github.com/search?q=topic:${topic}+org:karnov&type=Repositories`}
-//       target="_blank"
-//     >
-//       {topic}
-//     </a>
-//   );
-// }
-
-function ErrorIcon({ message }) {
-  return (
-    <span>
-      <img
-        className="error-icon"
-        src="https://uploads.codesandbox.io/uploads/user/6ffe47f4-119d-4313-bb06-b61839c0d576/W4Bf-Red-Alert.svg"
-        width="16"
-        height="13"
-        alt={message}
-        data-tip={message}
-      />
-      <ReactTooltip type="error" />
-    </span>
-  );
-}
+import TopicsCell from "./components/TopicsCell";
 
 class App extends React.Component {
   constructor() {
@@ -58,23 +19,22 @@ class App extends React.Component {
     this.state = {
       data: []
     };
-    this.renderEditableTopics = this.renderEditableTopics.bind(this);
   }
 
   async componentDidMount() {
-    const token = getToken();
+    const token = utils.getToken();
     const data = await github.getRepos(token);
     this.setState({ data });
   }
 
-  renderName(cellInfo) {
+  renderName(cell) {
     return (
       <div className="name">
-        {!utils.valid_name(cellInfo.value) && (
+        {!utils.valid_name(cell.value) && (
           <ErrorIcon message="Name can only include [a-z0-9.-] and should not start with &quot;kg&quot;!" />
         )}
-        <a href={cellInfo.original.htmlUrl} target="_blank">
-          {cellInfo.value}
+        <a href={cell.original.htmlUrl} target="_blank">
+          {cell.value}
         </a>
       </div>
     );
@@ -83,53 +43,14 @@ class App extends React.Component {
   onCellChange = key => (cell, value) => {
     const data = [...this.state.data];
 
-    data[cell.index][key] = value;
-
-    // TODO: Send update to github
-    this.setState({ data });
+    if (data[cell.index][key] !== value) {
+      data[cell.index][key] = value;
+      this.setState({ data });
+      // TODO: Send update to github
+      const repo_name = data[cell.index]["name"];
+      github.update(utils.getToken(), repo_name, key, value);
+    }
   };
-
-  // renderTopics(cellInfo) {
-  //   if (cellInfo.value && cellInfo.value.length > 0)
-  //     return (
-  //       <div>
-  //         {!utils.valid_topics(cellInfo.value) && (
-  //           <ErrorIcon message="Team topic is missing!" />
-  //         )}
-  //         {cellInfo.value.map((topic, i) => (
-  //           <TopicLink topic={topic} key={i} />
-  //         ))}
-  //       </div>
-  //     );
-  //   else {
-  //     return null;
-  //   }
-  // }
-
-  renderEditableTopics(cellInfo) {
-    return (
-      <div className="topic">
-        {!utils.valid_topics(cellInfo.value) && (
-          <ErrorIcon message="Team topic is missing!" />
-        )}
-        <TagsInput
-          value={cellInfo.value}
-          onChange={tags => {
-            const data = [...this.state.data];
-            if (data[cellInfo.index]["topics"] !== tags) {
-              data[cellInfo.index]["topics"] = tags;
-              this.setState({ data });
-              // update repo topics on github
-              const token = getToken();
-              const name = data[cellInfo.index]["name"];
-              //github.updateRepoTopics(token, this.props.name, tags);
-              console.log("topics updated on repo: " + name);
-            }
-          }}
-        />
-      </div>
-    );
-  }
 
   render() {
     const { data } = this.state;
@@ -156,7 +77,7 @@ class App extends React.Component {
                 {
                   Header: "Topics",
                   accessor: "topics",
-                  Cell: this.renderEditableTopics,
+                  Cell: TopicsCell(this.onCellChange("topics")),
                   minWidth: 200
                 },
                 {
@@ -165,6 +86,7 @@ class App extends React.Component {
                   accessor: d => (d.private ? "Yes" : "No"),
                   maxWitdh: 200
                 }
+                // TODO: add "last commit" column
               ]
             }
           ]}

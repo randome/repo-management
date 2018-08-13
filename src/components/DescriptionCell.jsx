@@ -1,7 +1,5 @@
 import React from "react";
-
 import ErrorIcon from "./ErrorIcon";
-
 import { valid_description } from "../utils";
 
 const descriptionCell = onChange => row => {

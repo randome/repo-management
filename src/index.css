@@ -75,7 +75,7 @@ a {
   padding-right: 5px;
 }
 
-.topic {
+.topics {
   display: flex;
   align-items: center;
 }
@@ -83,6 +83,7 @@ a {
 .react-tagsinput {
   width: 100%;
 }
+
 .ReactTable .rt-th,
 .ReactTable .rt-td {
   padding: 5px 5px;
